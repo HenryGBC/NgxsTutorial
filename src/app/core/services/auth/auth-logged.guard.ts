@@ -5,12 +5,18 @@ import {
   Router,
   CanActivate,
 } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { LoginComplete } from '../store/auth/auth.actions';
 import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root',
 })
 export class LoggedGuard implements CanActivate {
-  constructor(private _router: Router, private _authService: AuthService) {}
+  constructor(
+    private _router: Router,
+    private _authService: AuthService,
+    private store: Store
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -21,6 +27,7 @@ export class LoggedGuard implements CanActivate {
     const isLogged = this._authService.isLoggedIn();
     if (isLogged) {
       const token = this._authService.getToken();
+      this.store.dispatch(new LoginComplete());
 
       return true;
     }

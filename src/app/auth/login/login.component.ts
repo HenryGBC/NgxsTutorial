@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngxs/store';
+import { Login } from 'src/app/core/services/store/auth/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -8,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder, private store: Store) {
     this._initForm();
   }
 
@@ -35,6 +37,7 @@ export class LoginComponent implements OnInit {
     }
     const data = { ...this.loginForm.value };
     console.log(data);
+    this.store.dispatch(new Login(data));
   }
 
   private _initForm(): void {

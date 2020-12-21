@@ -9,6 +9,7 @@ export class AuthService {
     const tokenResponse = {
       token: '12312312312',
     };
+    console.log(tokenResponse);
     return of(tokenResponse);
   }
 

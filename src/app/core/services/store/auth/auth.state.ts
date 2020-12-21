@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { AuthService } from '../../auth/auth.service';
 import { Login, LoginComplete } from './auth.actions';
 import { AuthModel } from './auth.model';
@@ -16,16 +16,24 @@ import { Router } from '@angular/router';
 export class AuthState {
   constructor(private _authService: AuthService, private _router: Router) {}
 
+  @Selector()
+  static isLoggedIn(state: AuthModel) {
+    return state.isLogged;
+  }
+
   @Action(Login)
   login({ getState, setState }: StateContext<AuthModel>, { payload }: Login) {
+    console.log('payload', payload);
     return this._authService.login(payload).pipe(
       tap((response) => {
+        console.log(response);
         const state = getState();
         setState({
           ...state,
           isLogged: true,
           token: response.token,
         });
+        localStorage.setItem('token', response.token);
         this._router.navigateByUrl('/');
       })
     );
